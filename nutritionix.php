@@ -1,31 +1,31 @@
 <?php
 //
 // +---------------------------------------------------------------------------+
-// | Nutritionix PHP API Library                                                    	     		                               |
+// | Nutritionix PHP API Library	     		                               |
 // +---------------------------------------------------------------------------+
-// | Copyright (c) 2013 Nutritionix	                                                                                          |
-// | All rights reserved.                                                                                                            |
-// |                                                                                                                                           |
-// | Redistribution and use in source and binary forms, with or without                                  |
-// | modification, are permitted provided that the following conditions                                  |
-// | are met:                                                                                                                             |
-// |                                                                                                                                           |
-// | 1. Redistributions of source code must retain the above copyright                                   |
-// |    notice, this list of conditions and the following disclaimer.                                           |
-// | 2. Redistributions in binary form must reproduce the above copyright                             |
-// |    notice, this list of conditions and the following disclaimer in the                                  |
-// |    documentation and/or other materials provided with the distribution.                          |
-// |                                                                                                                                           |
-// | THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR                    |
-// | IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES           |
-// | OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.           |
-// | IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,                            |
-// | INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT          |
-// | NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,         |
-// | DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY             |
-// | THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT                       |
-// | (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF           |
-// | THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                          |
+// | Copyright (c) 2013 Nutritionix	                                           |
+// | All rights reserved.                                                      |
+// |                                                                           |
+// | Redistribution and use in source and binary forms, with or without        |
+// | modification, are permitted provided that the following conditions        |
+// | are met:                                                                  |
+// |                                                                           |
+// | 1. Redistributions of source code must retain the above copyright         |
+// |    notice, this list of conditions and the following disclaimer.          |
+// | 2. Redistributions in binary form must reproduce the above copyright      |
+// |    notice, this list of conditions and the following disclaimer in the    |
+// |    documentation and/or other materials provided with the distribution.   |
+// |                                                                           |
+// | THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR      |
+// | IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES |
+// | OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.   |
+// | IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,          |
+// | INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  |
+// | NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, |
+// | DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY     |
+// | THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT       |
+// | (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  |
+// | THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.         |
 // +---------------------------------------------------------------------------+
 //
 
@@ -46,7 +46,7 @@ class Nutritionix
 	 * Create the Nutritionix API client.
 	 *
 	 * @param string app_id		Nutritionix application ID
-	 * @param string api_key		Nutritionix API key
+	 * @param string api_key	Nutritionix API key
 	 */
 	public function __construct ($app_id, $api_key)
 	{
@@ -59,7 +59,7 @@ class Nutritionix
 	 *
 	 * @param string term		The phrase or terms you would like to search by
 	 * @param int from			(Optional)The minimum value for the number of items to return in "hits" array
-	 * @param int size				(Optional)The max value for the number of items to return in "hits" array
+	 * @param int size			(Optional)The max value for the number of items to return in "hits" array
 	 * @param int cal_min		(Optional)The minimum number of calories you want to be in an item returned in the results
 	 * @param int cal_max		(Optional)The maximum number of calories you want to be in an item returned in the results
 	 * @param string fields		(Optional)The fields from an item you would like to return in the results.
@@ -67,7 +67,7 @@ class Nutritionix
 	 *							A null parameter will return the following item fields only: item_name, brand_name, item_id.
 	 *							NOTE-- passing "*" as a value will return all item fields.
 	 *
-	 * @return array					The search results array
+	 * @return array			The search results array
 	 */
 	public function search($term, $from = NULL, $size = NULL, $cal_min = NULL, $cal_max = NULL, $fields = NULL)
 	{
@@ -85,7 +85,7 @@ class Nutritionix
 	 *
 	 * @param string id			The id of the item you want to retrieve
 	 *
-	 * @return array					The item array
+	 * @return array			The item array
 	 */
 	public function getItem($id)
 	{
@@ -97,7 +97,7 @@ class Nutritionix
 	 *
 	 * @param string id			The id of the brand you want to retrieve
 	 *
-	 * @return array					The brand array
+	 * @return array			The brand array
 	 */
 	public function getBrand($id)
 	{
@@ -108,10 +108,10 @@ class Nutritionix
 	 * Performs a query request with the Nutritionix API Server
 	 *
 	 * @param string method		Method of query. Current valid methods are: search, item, brand
-	 * @param string query			Query or search term / phrase
+	 * @param string query		Query or search term / phrase
 	 * @param array params		Parameters associated with the query
 	 *
-	 * @return array						The request results array
+	 * @return array			The request results array
 	 *
 	 * @error
 	 *	application_not_found
@@ -144,7 +144,7 @@ class Nutritionix
 	 *
 	 * @param array params		Parameters associated with the query
 	 *
-	 * @return array						The request results array
+	 * @return array			The request results array
 	 */
 	private function get_request_params($params)
 	{
@@ -161,9 +161,9 @@ class Nutritionix
 	 * Returned a (formatted, when possible) field of the item
 	 *
 	 * @param array item		The item
-	 * @param field					The field to get
+	 * @param field				The field to get
 	 *
-	 * @return mixed				The item field
+	 * @return mixed			The item field
 	 */
 	public function getItemField($item, $field)
 	{
