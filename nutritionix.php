@@ -1,7 +1,7 @@
 <?php
 //
 // +---------------------------------------------------------------------------+
-// | Nutritionix PHP API Library	     		                               |
+// | Nutritionix PHP API Library	     		                                     |
 // +---------------------------------------------------------------------------+
 // | Copyright (c) 2013 Nutritionix	                                           |
 // | All rights reserved.                                                      |
@@ -57,17 +57,17 @@ class Nutritionix
 	/**
 	 * Pass a search term into the API like taco, or cheese fries, and the API will return an array of matching foods.
 	 *
-	 * @param string term		The phrase or terms you would like to search by
-	 * @param int from			(Optional)The minimum value for the number of items to return in "hits" array
-	 * @param int size			(Optional)The max value for the number of items to return in "hits" array
-	 * @param int cal_min		(Optional)The minimum number of calories you want to be in an item returned in the results
-	 * @param int cal_max		(Optional)The maximum number of calories you want to be in an item returned in the results
+	 * @param string term			The phrase or terms you would like to search by
+	 * @param int from				(Optional)The minimum value for the number of items to return in "hits" array
+	 * @param int size				(Optional)The max value for the number of items to return in "hits" array
+	 * @param int cal_min			(Optional)The minimum number of calories you want to be in an item returned in the results
+	 * @param int cal_max			(Optional)The maximum number of calories you want to be in an item returned in the results
 	 * @param string fields		(Optional)The fields from an item you would like to return in the results.
 	 *							Supports all item properties in comma delimited format.
 	 *							A null parameter will return the following item fields only: item_name, brand_name, item_id.
 	 *							NOTE-- passing "*" as a value will return all item fields.
 	 *
-	 * @return array			The search results array
+	 * @return array					The search results array
 	 */
 	public function search($term, $from = NULL, $size = NULL, $cal_min = NULL, $cal_max = NULL, $fields = NULL)
 	{
@@ -85,7 +85,7 @@ class Nutritionix
 	 *
 	 * @param string id			The id of the item you want to retrieve
 	 *
-	 * @return array			The item array
+	 * @return array				The item array
 	 */
 	public function getItem($id)
 	{
@@ -97,7 +97,7 @@ class Nutritionix
 	 *
 	 * @param string id			The id of the brand you want to retrieve
 	 *
-	 * @return array			The brand array
+	 * @return array				The brand array
 	 */
 	public function getBrand($id)
 	{
@@ -111,7 +111,7 @@ class Nutritionix
 	 * @param string query		Query or search term / phrase
 	 * @param array params		Parameters associated with the query
 	 *
-	 * @return array			The request results array
+	 * @return array					The request results array
 	 *
 	 * @error
 	 *	application_not_found
@@ -144,7 +144,7 @@ class Nutritionix
 	 *
 	 * @param array params		Parameters associated with the query
 	 *
-	 * @return array			The request results array
+	 * @return array					The request results array
 	 */
 	private function get_request_params($params)
 	{
@@ -161,9 +161,9 @@ class Nutritionix
 	 * Returned a (formatted, when possible) field of the item
 	 *
 	 * @param array item		The item
-	 * @param field				The field to get
+	 * @param field					The field to get
 	 *
-	 * @return mixed			The item field
+	 * @return mixed				The item field
 	 */
 	public function getItemField($item, $field)
 	{
