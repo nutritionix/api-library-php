@@ -59,45 +59,43 @@ class Nutritionix
 	/**
 	 * Pass a search term into the API like taco, or cheese fries, and the API will return an array of matching foods.
 	 *
-	 * @param string term					The phrase or terms you would like to search by
-	 * @param int rangeStart			(Optional)Start of the range of results to view a section of up to 500 items in the "hits" array
-	 * @param int rangeEnd				(Optional)End of the range of results to view a section of up to 500 items in the "hits" array
-	 * 															by default, the api will fetch the first 10 results
-	 * @param int cal_min					(Optional)The minimum number of calories you want to be in an item returned in the results
-	 * @param int cal_max					(Optional)The maximum number of calories you want to be in an item returned in the results
-	 * @param string fields				(Optional)The fields from an item you would like to return in the results.
-	 *															Supports all item properties in comma delimited format.
-	 *															A null parameter will return the following item fields only: item_name, brand_name, item_id.
-	 *															NOTE-- passing "*" as a value will return all item fields.
-	 * @param string brandID			(Optional)Filter your results by a specific brand by passing in a brand_id
-	 * @param bool returnJson			(Optional)This will handle if the return value is array or json string
-	 *															The dev needs to make sure that the json result is returned with a json header,
-	 *															the api lib just returns the json string value
+	 * @param string term The phrase or terms you would like to search by
+	 * @param int rangeStart (Optional)Start of the range of results to view a section of up to 500 items in the "hits" array
+	 * @param int rangeEnd (Optional)End of the range of results to view a section of up to 500 items in the "hits" array
+	 *  by default, the api will fetch the first 10 results
+	 * @param int cal_min (Optional)The minimum number of calories you want to be in an item returned in the results
+	 * @param int cal_max (Optional)The maximum number of calories you want to be in an item returned in the results
+	 * @param string fields	(Optional)The fields from an item you would like to return in the results.
+	 * Supports all item properties in comma delimited format.
+	 * A null parameter will return the following item fields only: item_name, brand_name, item_id.
+	 * NOTE-- passing "*" as a value will return all item fields.
+	 * @param string brandID (Optional)Filter your results by a specific brand by passing in a brand_id
+	 * @param bool returnJson (Optional)This will handle if the return value is array or json string
+	 * The dev needs to make sure that the json result is returned with a json header,
+	 *  the api lib just returns the json string value
 	 *
-	 * @return 										The search results array or json string depending on the returnJson value
+	 * @return The search results array or json string depending on the return Json value
 	 */
 	public function search($term, $rangeStart = 0, $rangeEnd = 10, $cal_min = NULL, $cal_max = NULL, $fields = NULL, $brandID = NULL, $returnJson = false)
 	{
 		return $this->makeQueryRequest('search', urlencode($term),
 			array(
-					'results' 	=> $rangeStart.':'.$rangeEnd,
-				  'cal_min'	=> $cal_min,
-				  'cal_max'	=> $cal_max,
-				  'fields' 	=> $fields,
-				  'brand_id' 	=> $brandID,
+				  'results' => $rangeStart.':'.$rangeEnd,
+				  'cal_min' => $cal_min,
+				  'cal_max' => $cal_max,
+				  'fields' => $fields,
+				  'brand_id' => $brandID,
 			), $returnJson);
 	}
-
 
 	/**
 	 * This operation returns the an item object that contains data on all its nutritional content
 	 *
-	 * @param string id						The id of the item you want to retrieve
-	 * @param bool returnJson			(Optional)This will handle if the return value is array or json string
-	 *															The dev needs to make sure that the json result is returned with a json header,
-	 *															the api lib just returns the json string value
-	 *
-	 * @return 										The item array or json string depending on the returnJson value
+	 * @param string id The id of the item you want to retrieve
+	 * @param bool returnJson (Optional)This will handle if the return value is array or json string
+	 * The dev needs to make sure that the json result is returned with a json header,
+	 * the api lib just returns the json string value
+	 * @return The item array or json string depending on the returnJson value
 	 *
 	 */
 	public function getItem($id, $returnJson = false)
@@ -109,13 +107,13 @@ class Nutritionix
 	/**
 	 * This operation returns the a brand object that contains data on all its nutritional content
 	 *
-	 * @param string id						The id of the brand you want to retrieve
+	 * @param string id The id of the brand you want to retrieve
 	 *
-	 * @param bool returnJson			(Optional)This will handle if the return value is array or json string
-	 *															The dev needs to make sure that the json result is returned with a json header,
-	 *															the api lib just returns the json string value
+	 * @param bool returnJson (Optional)This will handle if the return value is array or json string
+	 * The dev needs to make sure that the json result is returned with a json header,
+	 * the api lib just returns the json string value
 	 *
-	 * @return 										The brand or json string depending on the returnJson value
+	 * @return The brand or json string depending on the returnJson value
 	 */
 	public function getBrand($id, $returnJson = false)
 	{
@@ -126,10 +124,10 @@ class Nutritionix
 	/**
 	 * Performs a query request with the Nutritionix API Server
 	 *
-	 * @param string method				Method of query. Current valid methods are: search, item, brand
-	 * @param string query				Query or search term / phrase
-	 * @param array params				Parameters associated with the query
-	 * @param bool returnJson			(Optional)This will handle if the return value is array or json string
+	 * @param string method	Method of query. Current valid methods are: search, item, brand
+	 * @param string query Query or search term / phrase
+	 * @param array params Parameters associated with the query
+	 * @param bool returnJson (Optional)This will handle if the return value is array or json string
 	 *															The dev needs to make sure that the json result is returned with a json header,
 	 *															the api lib just returns the json string value
 	 *
