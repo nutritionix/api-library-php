@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel='stylesheet' type='text/css' media='screen' href='../bootstrap/css/bootstrap.min.css'>
+	<link rel='stylesheet' type='text/css' media='screen' href='../css/demo.css'>
+</head>
+<body>
+
+<form class="form-horizontal" id="searchForm">
+	<h2>/search Endpoint</h2>
+
+	<div class="control-group">
+		<label class="control-label required" for="apiID">Nutritionix API ID</label>
+		<div class="controls">
+			<input type="text" id="apiID" name="apiID"><br/>
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label required" for="apiKey">Nutritionix API Key</label>
+		<div class="controls">
+			<input type="text" id="apiKey" name="apiKey">
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label required" for="phrase">Search Phrase</label>
+		<div class="controls">
+			<input type="text" id="phrase" name="phrase"> (text)
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label" for="brand_id">Brand ID</label>
+		<div class="controls">
+			<input type="text" id="brand_id" name="brand_id"> (text)
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label" for="rangeStart">Result Range Start</label>
+		<div class="controls">
+			<input type="text" id="rangeStart" name="rangeStart"> (interger)
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label" for="rangeEnd">Result Range End</label>
+		<div class="controls">
+			<input type="text" id="rangeEnd" name="rangeEnd"> (interger)
+		</div>
+	</div>
+
+	<!--
+	<div class="control-group">
+		<label class="control-label" for="sort_field">sort_field</label>
+		<div class="controls">
+			<input type="text" id="sort_field" name="sort_field"> (text)
+		</div>
+	</div>
+
+	<div class="controls-row">
+		<label class="control-label">sort_order</label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<label class="radio inline">
+			<input type="radio" name="sort_order" value="asc"/> Ascending
+		</label>
+		<label class="radio inline">
+			<input type="radio" name="sort_order" value="desc"/> Descending
+		</label>
+		<label class="radio inline">
+			<input type="radio" name="sort_order" value="-1" checked/> Not Set
+		</label>
+	</div><br/>
+	-->
+
+	<div class="control-group">
+		<label class="control-label" for="min_score">Minimum Search Score</label>
+		<div class="controls">
+			<input type="text" id="min_score" name="min_score"> (interger)
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label" for="cal_min">Minimum Calories</label>
+		<div class="controls">
+			<input type="text" id="cal_min" name="cal_min"> (interger)
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label" for="cal_max">Maximum Calories</label>
+		<div class="controls">
+			<input type="text" id="cal_max" name="cal_max"> (interger)
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label" for="fields">Fields (use * to return all fields)</label>
+		<div class="controls">
+			<input type="text" id="fields" name="fields"> (text)
+		</div>
+	</div>
+
+	<!--
+	<div class="control-group">
+		<label class="control-label" for="filters">filters</label>
+		<div class="controls">
+			<input type="text" id="filters" name="filters"> (text)
+		</div>
+	</div>
+	-->
+
+	<div class="controls-row">
+		<label class="control-label">Contains Milk?</label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<label class="radio inline">
+			<input type="radio" name="allergen_contains_milk" value="1"/> True
+		</label>
+		<label class="radio inline">
+			<input type="radio" name="allergen_contains_milk" value="0"/> False
+		</label>
+		<label class="radio inline">
+			<input type="radio" name="allergen_contains_milk" value="-1" checked/> Not Set
+		</label>
+	</div>
+
+	<div class="controls-row">
+		<label class="control-label">Contains Eggs?</label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<label class="radio inline">
+			<input type="radio" name="allergen_contains_eggs" value="1"/> True
+		</label>
+		<label class="radio inline">
+			<input type="radio" name="allergen_contains_eggs" value="0"/> False
+		</label>
+		<label class="radio inline">
+			<input type="radio" name="allergen_contains_eggs" value="-1" checked/> Not Set
+		</label>
+	</div>
+
+	<div class="controls-row">
+		<label class="control-label">Contains Fish?</label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<label class="radio inline">
+			<input type="radio" name="allergen_contains_fish" value="1"/> True
+		</label>
+		<label class="radio inline">
+			<input type="radio" name="allergen_contains_fish" value="0"/> False
+		</label>
+		<label class="radio inline">
+			<input type="radio" name="allergen_contains_fish" value="-1" checked> Not Set
+		</label>
+	</div>
+
+	<div class="controls-row">
+		<label class="control-label">Contains Shellfish?</label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<label class="radio inline">
+			<input type="radio" name="allergen_contains_shellfish" value="1"/> True
+		</label>
+		<label class="radio inline">
+			<input type="radio" name="allergen_contains_shellfish" value="0"/> False
+		</label>
+		<label class="radio inline">
+			<input type="radio" name="allergen_contains_shellfish" value="-1" checked> Not Set
+		</label>
+	</div>
+
+	<div class="controls-row">
+		<label class="control-label">Contains Tree Nuts?</label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<label class="radio inline">
+			<input type="radio" name="allergen_contains_tree_nuts" value="1"/> True
+		</label>
+		<label class="radio inline">
+			<input type="radio" name="allergen_contains_tree_nuts" value="0"/> False
+		</label>
+		<label class="radio inline">
+			<input type="radio" name="allergen_contains_tree_nuts" value="-1" checked> Not Set
+		</label>
+	</div>
+
+	<div class="controls-row">
+		<label class="control-label">Contains Peanuts?</label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<label class="radio inline">
+			<input type="radio" name="allergen_contains_peanuts" value="1"/> True
+		</label>
+		<label class="radio inline">
+			<input type="radio" name="allergen_contains_peanuts" value="0"/> False
+		</label>
+		<label class="radio inline">
+			<input type="radio" name="allergen_contains_peanuts" value="-1" checked> Not Set
+		</label>
+	</div>
+
+	<div class="controls-row">
+		<label class="control-label">Contains Wheat?</label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<label class="radio inline">
+			<input type="radio" name="allergen_contains_wheat" value="1"/> True
+		</label>
+		<label class="radio inline">
+			<input type="radio" name="allergen_contains_wheat" value="0"/> False
+		</label>
+		<label class="radio inline">
+			<input type="radio" name="allergen_contains_wheat" value="-1" checked> Not Set
+		</label>
+	</div>
+
+	<div class="controls-row">
+		<label class="control-label">Contains Soybeans?</label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<label class="radio inline">
+			<input type="radio" name="allergen_contains_soybeans" value="1"/> True
+		</label>
+		<label class="radio inline">
+			<input type="radio" name="allergen_contains_soybeans" value="0"/> False
+		</label>
+		<label class="radio inline">
+			<input type="radio" name="allergen_contains_soybeans" value="-1" checked> Not Set
+		</label>
+	</div>
+
+	<div class="controls-row">
+		<label class="control-label">Contains Gluten?</label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<label class="radio inline">
+			<input type="radio" name="allergen_contains_gluten" value="1"/> True
+		</label>
+		<label class="radio inline">
+			<input type="radio" name="allergen_contains_gluten" value="0"/> False
+		</label>
+		<label class="radio inline">
+			<input type="radio" name="allergen_contains_gluten" value="-1" checked> Not Set
+		</label>
+	</div>
+
+	<div class="controls-row">
+		<label class="control-label">Return Result As</label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<label class="radio inline">
+			<input type="radio" name="return_result_as_json" value="1" id="returnAsJson" checked/> JSON
+		</label>
+		<label class="radio inline">
+			<input type="radio" name="return_result_as_json" value="0"/> PHP Array
+		</label>
+	</div>
+
+	<div class="controls-row">
+		<label class="control-label">Return Request Url?</label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<label class="radio inline">
+			<input type="radio" name="return_request_url" value="1" checked/> True
+		</label>
+		<label class="radio inline">
+			<input type="radio" name="return_request_url" value="0"/> False
+		</label>
+	</div>
+
+	<button type="submit" class="btn btn-default" id="submitForm">Submit</button>
+
+	<a name="resultArea"></a>
+	<h3>Result</h3>
+	<a name="resultArea2"></a>
+	<pre id="result"></pre>
+</form>
+
+<script type="text/javascript" src="../js/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="../js/json.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#apiID').val('4923352a');
+	$('#apiKey').val('92ba2038b71107c4231dd4070071fd1c');
+
+	$('#searchForm').submit(function(){
+		$('#result').html('Processing your request...');
+		$('html,body').animate({scrollTop: $("a[name='resultArea']").offset().top}, 'fast');
+		$.post('process-search.php', {'param' : $('#searchForm').serialize()}, function(searchResult){
+			if ($('#returnAsJson').attr('checked') == 'checked')
+				$('#result').html( JSON.stringify(jQuery.parseJSON(searchResult), null, '\t') );
+			else
+				$('#result').html(searchResult);
+			$('html,body').animate({scrollTop: $("a[name='resultArea2']").offset().top}, 'fast');
+		});
+		return false;
+	});
+});
+</script>
+</body>
+</html>

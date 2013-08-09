@@ -1,0 +1,36 @@
+body{
+	padding: 20px;
+}
+
+label{
+	font-weight: bold;
+}
+
+input[type=text]{
+	width: 50px;
+}
+
+#phrase, #fields, #filters{
+	width: 1080px;
+}
+
+#apiID{
+	width: 80px;
+}
+
+#apiKey{
+	width: 270px;
+}
+
+#brand_id, #sort_field{
+	width: 400px;
+}
+
+textarea{
+	width: 1080px;
+	height: 250px;
+}
+
+.required{
+	color: red;
+}
