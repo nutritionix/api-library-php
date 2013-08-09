@@ -12,14 +12,14 @@
 	<div class="control-group">
 		<label class="control-label required" for="apiID">Nutritionix API ID</label>
 		<div class="controls">
-			<input type="text" id="apiID" name="apiID"><br/>
+			<input type="text" id="apiID" name="apiID"> (text)
 		</div>
 	</div>
 
 	<div class="control-group">
 		<label class="control-label required" for="apiKey">Nutritionix API Key</label>
 		<div class="controls">
-			<input type="text" id="apiKey" name="apiKey">
+			<input type="text" id="apiKey" name="apiKey"> (text)
 		</div>
 	</div>
 
@@ -245,12 +245,12 @@
 		<label class="radio inline">
 			<input type="radio" name="return_request_url" value="0"/> False
 		</label>
-	</div>
+	</div><br/>
 
-	<button type="submit" class="btn btn-default" id="submitForm">Submit</button>
+	<button type="submit" class="btn btn-primary btn-lg" id="submitForm">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Submit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
 
 	<a name="resultArea"></a>
-	<h3>Result</h3>
+	<h2>Result</h2>
 	<a name="resultArea2"></a>
 	<pre id="result"></pre>
 </form>
@@ -259,9 +259,6 @@
 <script type="text/javascript" src="../js/json.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-	$('#apiID').val('4923352a');
-	$('#apiKey').val('92ba2038b71107c4231dd4070071fd1c');
-
 	$('#searchForm').submit(function(){
 		$('#result').html('Processing your request...');
 		$('html,body').animate({scrollTop: $("a[name='resultArea']").offset().top}, 'fast');

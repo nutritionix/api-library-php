@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel='stylesheet' type='text/css' media='screen' href='../bootstrap/css/bootstrap.min.css'>
+	<link rel='stylesheet' type='text/css' media='screen' href='../css/demo.css'>
+</head>
+<body>
+
+<form class="form-horizontal" id="searchForm">
+	<h2>/brand Endpoint</h2>
+
+	<div class="control-group">
+		<label class="control-label required" for="apiID">Nutritionix API ID</label>
+		<div class="controls">
+			<input type="text" id="apiID" name="apiID"> (text)
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label required" for="apiKey">Nutritionix API Key</label>
+		<div class="controls">
+			<input type="text" id="apiKey" name="apiKey"> (text)
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label required" for="id">ID</label>
+		<div class="controls">
+			<input type="text" id="id" name="id"> (text)
+		</div>
+	</div>
+
+	<div class="controls-row">
+		<label class="control-label">Return Result As</label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<label class="radio inline">
+			<input type="radio" name="return_result_as_json" value="1" id="returnAsJson" checked/> JSON
+		</label>
+		<label class="radio inline">
+			<input type="radio" name="return_result_as_json" value="0"/> PHP Array
+		</label>
+	</div>
+
+	<div class="controls-row">
+		<label class="control-label">Return Request Url?</label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<label class="radio inline">
+			<input type="radio" name="return_request_url" value="1" checked/> True
+		</label>
+		<label class="radio inline">
+			<input type="radio" name="return_request_url" value="0"/> False
+		</label>
+	</div><br/>
+
+	<button type="submit" class="btn btn-primary btn-lg" id="submitForm">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Submit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+
+	<a name="resultArea"></a>
+	<h2>Result</h2>
+	<a name="resultArea2"></a>
+	<pre id="result"></pre>
+</form>
+
+<script type="text/javascript" src="../js/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="../js/json.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#searchForm').submit(function(){
+		$('#result').html('Processing your request...');
+		$('html,body').animate({scrollTop: $("a[name='resultArea']").offset().top}, 'fast');
+		$.post('process-brand.php', {'param' : $('#searchForm').serialize()}, function(searchResult){
+			if ($('#returnAsJson').attr('checked') == 'checked')
+				$('#result').html( JSON.stringify(jQuery.parseJSON(searchResult), null, '\t') );
+			else
+				$('#result').html(searchResult);
+			$('html,body').animate({scrollTop: $("a[name='resultArea2']").offset().top}, 'fast');
+		});
+		return false;
+	});
+});
+</script>
+</body>
+</html>

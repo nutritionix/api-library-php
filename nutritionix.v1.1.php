@@ -107,14 +107,14 @@ class Nutritionix
 		$rangeEnd = $rangeEnd > 0 ? $rangeEnd : 10;
 		$options['results'] = $rangeStart.':'.$rangeEnd;
 
-		/*
+	/*
 		$sort_field .= '';
 		if ($sort_field != ''){
 			$options['sort']['field'] = $sort_field;
 			if ($sort_order !== NULL && in_array( $sort_order, array('asc', 'desc') ) )
 				$options['sort']['order'] = $sort_order;
 		}
-		*/
+	*/
 
 		$min_score = (int)$min_score;
 		if ($min_score > 0)
@@ -173,8 +173,10 @@ class Nutritionix
 	 * @return The item array or json string depending on the returnJson value
 	 *
 	 */
-	public function getItem($id, $returnJson = false, $returnRequestUrl = false){
-		return $this -> makeQueryRequest('item', urlencode($id), array(), $returnJson, $returnRequestUrl);
+	public function getItem($searchTerm, $searchType, $returnJson = false, $returnRequestUrl = false){
+		$options = array();
+		$options[$searchType] = $searchTerm;
+		return $this -> makeQueryRequest('item', null, $options, $returnJson, $returnRequestUrl);
 	}
 
 
@@ -211,7 +213,10 @@ class Nutritionix
 	 */
 	private function makeQueryRequest($method, $query, $params = array(), $returnJson = false, $returnRequestUrl = false){
 		$post_params = $this -> get_request_params($params);
-		$request_url = $this -> api_url.$method.'/'.$query.'?'.$post_params;
+		if ( in_array( $method, array('search', 'brand') ) )
+			$request_url = $this -> api_url.$method.'/'.$query.'?'.$post_params;
+		else
+			$request_url = $this -> api_url.$method.'?'.$post_params;
 
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $request_url);
@@ -221,14 +226,6 @@ class Nutritionix
 		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 
 		$result = json_decode(curl_exec($ch), true);
-		if (!$returnJson){
-			//$result = json_decode(curl_exec($ch), true);
-			if ( is_array($result) && ( isset($result['error_code']) || isset($result['error_message']) ) ){
-				$error_messsage = NutritionixException::$error_messages[ $result['error_code'] ];
-				throw new NutritionixException($error_messsage, 1);
-			}
-		}
-
 		if ($returnRequestUrl)
 			$result['request_url'] = $request_url;
 
@@ -282,7 +279,8 @@ class NutritionixException extends Exception
 	 * Array mapping error codes to messages
 	 */
 	public static $error_messages = array(
-		'application_not_found' => 'Invalid App ID'
+		'application_not_found' => 'Invalid App ID',
+		'brand_not_found' => 'The Brand isn\'t on the Database',
 	);
 
 

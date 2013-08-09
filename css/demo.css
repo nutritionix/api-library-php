@@ -10,8 +10,12 @@ input[type=text]{
 	width: 50px;
 }
 
-#phrase, #fields, #filters{
-	width: 1080px;
+#phrase, #id, #upc{
+	width: 400px;
+}
+
+#fields, #filters{
+	width: 800px;
 }
 
 #apiID{

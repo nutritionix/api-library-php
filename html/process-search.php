@@ -1,7 +1,5 @@
 <?
 if (isset($_POST['param']) && trim($_POST['param']) != ''){
-	//echo $_POST['param'];exit;
-	//$newData = array();
 	parse_str(trim($_POST['param']), $newData);
 	$newData['phrase'] = trim($newData['phrase']);
 	$newData['phrase'] .= '';
