@@ -29,6 +29,8 @@
 // +---------------------------------------------------------------------------+
 //
 
+
+// NOTE: THIS EXAMPLE APPLIES TO ONLY V1.0 OF API.  AS OF JULY 2013, V1.1 IS THE CURRENT VERSION OF THE NUTRITIONIX API.
 require_once 'config.inc.php';
 
 $nutritionix = new Nutritionix(NUTRITIONIX_APP_ID, NUTRITIONIX_APP_KEY);
