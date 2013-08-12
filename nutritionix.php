@@ -1,5 +1,7 @@
 <?php
-//
+//  NOTE:  THIS APPLIES TO THE LEGACY v1.0 version of NUTRITIONIX API
+//  IF YOU ARE BEGINNING DEVELOPMENT AFTER JULY 2013, DO NOT USE THIS
+//  INSTEAD, USE THE v1.1 DOCUMENT
 // +---------------------------------------------------------------------------+
 // | Nutritionix PHP API Library	     		                                     |
 // +---------------------------------------------------------------------------+
