@@ -41,9 +41,8 @@ if ( !function_exists('json_decode') ){
 class Nutritionix
 {
 	private $app_id;
-	private $api_key;
-	private $api_url = "https://api.nutritionix.com/v1_1/";
-	private $api_url_search_post = "https://api.nutritionix.com/v1_1/search";
+	private $apikey;
+	private $api_url = "http://api.nutritionix.com/v1_1/";
 
 
 	/**
@@ -79,58 +78,59 @@ class Nutritionix
 	 * @return The search results array or json string depending on the return Json value
 	 */
 	public function search(
-			$item_name,
-			$brand_name = NULL,
-			$offset = 0, $limit = 10,
+			$phrase,
+			$brand_id = NULL,
+			$rangeStart = 0, $rangeEnd = 10,
 			$min_score = NULL,
+			$cal_min = NULL, $cal_max = NULL,
 			$fields = NULL,
-			$allergen_contains_milk = NULL, $allergen_contains_eggs = NULL, $allergen_contains_fish = NULL,
-			$allergen_contains_shellfish = NULL, $allergen_contains_tree_nuts = NULL, $allergen_contains_peanuts = NULL,
-			$allergen_contains_wheat = NULL, $allergen_contains_soybeans = NULL, $allergen_contains_gluten = NULL,
-			$sort = array(),
-			$filters = array(),
-			$returnJson = false
+			$allergen_contains_milk = NULL,
+			$allergen_contains_eggs = NULL,
+			$allergen_contains_fish = NULL,
+			$allergen_contains_shellfish = NULL,
+			$allergen_contains_tree_nuts = NULL,
+			$allergen_contains_peanuts = NULL,
+			$allergen_contains_wheat = NULL,
+			$allergen_contains_soybeans = NULL,
+			$allergen_contains_gluten = NULL,
+			$returnJson = false,
+			$returnRequestUrl = false
 	){
 		$options = array();
+		$brand_id .= '';
+		if ($brand_id != '')
+			$options['brand_id'] = $brand_id;
 
-		$brand_name = trim($brand_name);
-		$brand_name .= '';
-		//if brand name is not empty then use QUERIES instead of QUERY
-		if ($brand_name != '')
-			$options['queries'] = array(
-				'item_name' => trim($item_name),
-				'brand_name' => trim($brand_name),
-			);
-		else
-			$options['query'] = trim($item_name);
+		$rangeStart = (int)$rangeStart;
+		$rangeStart = $rangeStart > -1 ? $rangeStart : 0;
+		$rangeEnd = (int)$rangeEnd;
+		$rangeEnd = $rangeEnd > 0 ? $rangeEnd : 10;
+		$options['results'] = $rangeStart.':'.$rangeEnd;
 
-		$offset = (int)$offset;
-		$offset = $offset > -1 ? $offset : 0;
-		$options['offset'] = $offset;
-		$limit = (int)$limit;
-		$limit = $limit > 9 ? $limit : 10;
-		$options['limit'] = $limit;
-
-		if (is_array($sort) && count($sort) == 2 && $sort['field'] != null && $sort['field'] != '' &&
-				$sort['order'] !== NULL && in_array( $sort['order'], array('asc', 'desc') ) ){
-			$options['sort']['field'] = $sort['field'];
-			$options['sort']['order'] = $sort['order'];
+	/*
+		$sort_field .= '';
+		if ($sort_field != ''){
+			$options['sort']['field'] = $sort_field;
+			if ($sort_order !== NULL && in_array( $sort_order, array('asc', 'desc') ) )
+				$options['sort']['order'] = $sort_order;
 		}
+	*/
 
-		if (is_array($filters) && count($filters) > 0)
-			$options['filters'] = $filters;
-
-		$min_score = (float)$min_score;
+		$min_score = (int)$min_score;
 		if ($min_score > 0)
 			$options['min_score'] = $min_score;
 
+		$cal_min = (int)$cal_min;
+		if ($cal_min > -1)
+			$options['cal_min'] = $cal_min;
+
+		$cal_max = (int)$cal_max;
+		if ($cal_max > 0)
+			$options['cal_max'] = $cal_max;
+
 		$fields .= '';
-		if ($fields != ''){
-			$fieldsArray = explode(',', $fields);
-			$options['fields'] = array();
-			foreach($fieldsArray as $value)
-				$options['fields'][] = trim($value);
-		}
+		if ($fields != '')
+			$options['fields'] = $fields;
 
 		if ($allergen_contains_milk !== NULL && in_array( $allergen_contains_milk, array(true, false) ) )
 			$options['allergen_contains_milk'] = $allergen_contains_milk ? 'true' : 'false';
@@ -159,7 +159,7 @@ class Nutritionix
 		if ($allergen_contains_gluten !== NULL && in_array( $allergen_contains_gluten, array(true, false) ) )
 			$options['allergen_contains_gluten'] = $allergen_contains_gluten ? 'true' : 'false';
 
-		return $this -> makeQueryRequest('search', $item_name, $options, $returnJson);
+		return $this -> makeQueryRequest('search', urlencode($phrase), $options, $returnJson, $returnRequestUrl);
 	}
 
 
@@ -212,57 +212,29 @@ class Nutritionix
 	 *	application_not_found
 	 */
 	private function makeQueryRequest($method, $query, $params = array(), $returnJson = false, $returnRequestUrl = false){
-		if ( in_array( $method, array('item', 'brand') ) )
-			$post_params = $this -> get_request_params($params);
-
-		if ($method == 'brand')
+		$post_params = $this -> get_request_params($params);
+		if ( in_array( $method, array('search', 'brand') ) )
 			$request_url = $this -> api_url.$method.'/'.$query.'?'.$post_params;
-		else if ($method == 'item')
+		else
 			$request_url = $this -> api_url.$method.'?'.$post_params;
 
-		if ($method != 'search'){
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL, $request_url);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_USERAGENT, 'Nutritionix API v1.1 PHP Client '.phpversion());
-			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-			curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $request_url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_USERAGENT, 'Nutritionix API v1.1 PHP Client '.phpversion());
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 
-			$result = json_decode(curl_exec($ch), true);
-		}else{
-			$data = array(
-				'appId' => $this -> app_id,
-				'appKey' => $this -> api_key,
-			);
-
-			$data_merged = array_merge($data, $params);
-			$data_string = json_encode($data_merged);
-
-			$ch = curl_init($this -> api_url_search_post);
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-			curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-				'Content-Type: application/json',
-				'Content-Length: '.strlen($data_string)
-			));
-
-			$result = json_decode( curl_exec($ch) );
-
-			if ( curl_errno($ch) )
-				$result['api_error'] = curl_error($ch);
-		}
-
-		curl_close($ch);
-
-		if ($method != 'search' && $returnRequestUrl)
-			$result = array(
-				'request_url' => $request_url,
-			);
+		$result = json_decode(curl_exec($ch), true);
+		if ($returnRequestUrl)
+			$result['request_url'] = $request_url;
 
 		if ($returnJson)
 			$result = json_encode($result);
 
+		print_r($result);exit;
+
+		curl_close($ch);
 		return $result;
 	}
 
