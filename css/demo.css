@@ -10,7 +10,7 @@ input[type=text]{
 	width: 50px;
 }
 
-#phrase, #id, #upc{
+#phrase, #id, #upc, #brand_name, #item_name{
 	width: 400px;
 }
 

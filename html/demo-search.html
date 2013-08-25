@@ -24,91 +24,73 @@
 	</div>
 
 	<div class="control-group">
-		<label class="control-label required" for="phrase">Search Phrase</label>
+		<label class="control-label required" for="item_name">Query (Item Name)</label>
 		<div class="controls">
-			<input type="text" id="phrase" name="phrase"> (text)
+			<input type="text" id="item_name" name="item_name"> (text)
 		</div>
 	</div>
 
 	<div class="control-group">
-		<label class="control-label" for="brand_id">Brand ID</label>
+		<label class="control-label" for="brand_name">Query (Brand Name)</label>
 		<div class="controls">
-			<input type="text" id="brand_id" name="brand_id"> (text)
+			<input type="text" id="brand_name" name="brand_name"> (text)<br/>
+			<b>NOTE:</b> If this if filled, then <b>QUERIES</b> will be used instead of <b>QUERY</b>
 		</div>
 	</div>
 
 	<div class="control-group">
-		<label class="control-label" for="rangeStart">Result Range Start</label>
+		<label class="control-label" for="offset">Offset</label>
 		<div class="controls">
-			<input type="text" id="rangeStart" name="rangeStart"> (interger)
+			<input type="text" id="offset" name="offset"> (interger)
 		</div>
 	</div>
 
 	<div class="control-group">
-		<label class="control-label" for="rangeEnd">Result Range End</label>
+		<label class="control-label" for="limit">Limit (10 to 50)</label>
 		<div class="controls">
-			<input type="text" id="rangeEnd" name="rangeEnd"> (interger)
+			<input type="text" id="limit" name="limit"> (interger)
 		</div>
 	</div>
 
-	<!--
 	<div class="control-group">
-		<label class="control-label" for="sort_field">sort_field</label>
+		<label class="control-label" for="sort_field">Sort Field</label>
 		<div class="controls">
 			<input type="text" id="sort_field" name="sort_field"> (text)
 		</div>
 	</div>
 
 	<div class="controls-row">
-		<label class="control-label">sort_order</label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<label class="control-label">Sort Order</label>&nbsp;&nbsp;&nbsp;&nbsp;
 		<label class="radio inline">
 			<input type="radio" name="sort_order" value="asc"/> Ascending
 		</label>
 		<label class="radio inline">
-			<input type="radio" name="sort_order" value="desc"/> Descending
-		</label>
-		<label class="radio inline">
-			<input type="radio" name="sort_order" value="-1" checked/> Not Set
+			<input type="radio" name="sort_order" value="desc" checked/> Descending
 		</label>
 	</div><br/>
-	-->
 
 	<div class="control-group">
 		<label class="control-label" for="min_score">Minimum Search Score</label>
 		<div class="controls">
-			<input type="text" id="min_score" name="min_score"> (interger)
+			<input type="text" id="min_score" name="min_score"> (float)
 		</div>
 	</div>
 
 	<div class="control-group">
-		<label class="control-label" for="cal_min">Minimum Calories</label>
+		<label class="control-label" for="fields">Fields (separated by comma. leave blank to return all fields)</label>
 		<div class="controls">
-			<input type="text" id="cal_min" name="cal_min"> (interger)
+			<input type="text" id="fields" name="fields"> (text)<br/>
+			Example: <b><i>item_name,brand_name,nf_calories,nf_sodium,item_type</i></b>
 		</div>
 	</div>
 
 	<div class="control-group">
-		<label class="control-label" for="cal_max">Maximum Calories</label>
+		<label class="control-label" for="filters">Filters (should be a valid JSON array)</label>
 		<div class="controls">
-			<input type="text" id="cal_max" name="cal_max"> (interger)
+			<input type="text" id="filters" name="filters"> (text)<br/>
+			Example: <b><i>{"not":{"item_type":2},"nf_calories":{"from":0,"to":400}}</i></b>
 		</div>
 	</div>
-
-	<div class="control-group">
-		<label class="control-label" for="fields">Fields (use * to return all fields)</label>
-		<div class="controls">
-			<input type="text" id="fields" name="fields"> (text)
-		</div>
-	</div>
-
-	<!--
-	<div class="control-group">
-		<label class="control-label" for="filters">filters</label>
-		<div class="controls">
-			<input type="text" id="filters" name="filters"> (text)
-		</div>
-	</div>
-	-->
 
 	<div class="controls-row">
 		<label class="control-label">Contains Milk?</label>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -235,20 +217,11 @@
 		<label class="radio inline">
 			<input type="radio" name="return_result_as_json" value="0"/> PHP Array
 		</label>
-	</div>
-
-	<div class="controls-row">
-		<label class="control-label">Return Request Url?</label>&nbsp;&nbsp;&nbsp;&nbsp;
-		<label class="radio inline">
-			<input type="radio" name="return_request_url" value="1" checked/> True
-		</label>
-		<label class="radio inline">
-			<input type="radio" name="return_request_url" value="0"/> False
-		</label>
 	</div><br/>
 
-	<button type="submit" class="btn btn-primary btn-lg" id="submitForm">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Submit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+	<button type="submit" class="btn btn-primary btn-lg" id="submitForm">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Submit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button><br/><br/>
 
+	<hr/>
 	<a name="resultArea"></a>
 	<h2>Result</h2>
 	<a name="resultArea2"></a>
@@ -263,9 +236,12 @@ $(document).ready(function(){
 		$('#result').html('Processing your request...');
 		$('html,body').animate({scrollTop: $("a[name='resultArea']").offset().top}, 'fast');
 		$.post('process-search.php', {'param' : $('#searchForm').serialize()}, function(searchResult){
-			if ($('#returnAsJson').attr('checked') == 'checked')
-				$('#result').html( JSON.stringify(jQuery.parseJSON(searchResult), null, '\t') );
-			else
+			if ($('#returnAsJson').attr('checked') == 'checked'){
+				if (typeof searchResult =='object')
+					$('#result').html( JSON.stringify(searchResult, null, '\t') );
+				else
+					$('#result').html( JSON.stringify(jQuery.parseJSON(searchResult), null, '\t') );
+			}else
 				$('#result').html(searchResult);
 			$('html,body').animate({scrollTop: $("a[name='resultArea2']").offset().top}, 'fast');
 		});
