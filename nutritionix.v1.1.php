@@ -42,6 +42,7 @@ class Nutritionix
 {
 	private $app_id;
 	private $api_key;
+	//for testing this on your local machine, change https to http
 	private $api_url = "https://api.nutritionix.com/v1_1/";
 	private $api_url_search_post = "https://api.nutritionix.com/v1_1/search";
 
@@ -60,23 +61,28 @@ class Nutritionix
 
 	/**
 	 * Pass a search term into the API like taco, or cheese fries, and the API will return an array of matching foods.
+	 * for more details on what values you can use, please go to https://developer.nutritionix.com/docs/v1_1
+	 * demo http://dev2.nutritionix.com/html/nutritionix-api/html/demo-search.html
 	 *
-	 * @param string term The phrase or terms you would like to search by
-	 * @param int rangeStart (Optional)Start of the range of results to view a section of up to 500 items in the "hits" array
-	 * @param int rangeEnd (Optional)End of the range of results to view a section of up to 500 items in the "hits" array
-	 *  by default, the api will fetch the first 10 results
-	 * @param int cal_min (Optional)The minimum number of calories you want to be in an item returned in the results
-	 * @param int cal_max (Optional)The maximum number of calories you want to be in an item returned in the results
+	 * @param string $item_name => The phrase or term that you would like to search for on the item name field
+	 * @param string $brand_name (optional) => The phrase or terms you would like to search for on the brand name field
+	 *                   if you supply this value then queries will be used instead of query
+	 * @param int $offset (Optional) => The starting point in the result set for paging
+	 * @param int $limit (Optional) => The max number of results to be returned in the page
+	 *                   by default, the api will fetch the first 10 results
+	 * @param int $min_score (Optional) => the minimum score that you want any returned document to have
 	 * @param string fields	(Optional)The fields from an item you would like to return in the results.
-	 * Supports all item properties in comma delimited format.
-	 * A null parameter will return the following item fields only: item_name, brand_name, item_id.
-	 * NOTE-- passing "*" as a value will return all item fields.
-	 * @param string brandID (Optional)Filter your results by a specific brand by passing in a brand_id
-	 * @param bool returnJson (Optional)This will handle if the return value is array or json string
-	 * The dev needs to make sure that the json result is returned with a json header,
-	 *  the api lib just returns the json string value
+	 *                   Supports all item properties in comma delimited format.
+	 *                   A null parameter will return all item fields
+	 * @param bool $allergen_contains_* (Optional) => this will filter the result in case you want to return results with
+	 *                   very specific allergens
+	 * @param array $sort (Optional) => an array to customize how the result will be sorted
+	 * @param array $filters (Optional) => an array to filter the results to allow more customized results
+	 * @param bool $returnJson (Optional) => This will handle if the return value is array or json string
+	 *                   The dev needs to make sure that the json result is returned with a json header,
+	 *                   the api lib just returns the json string value
 	 *
-	 * @return The search results array or json string depending on the return Json value
+	 * @return The results as a PHP array or json string depending on the $returnJson parameter
 	 */
 	public function search(
 			$item_name,
@@ -165,12 +171,17 @@ class Nutritionix
 
 	/**
 	 * This operation returns the an item object that contains data on all its nutritional content
+	 * for more details on what values you can use, please go to https://developer.nutritionix.com/docs/v1_1
+	 * demo http://dev2.nutritionix.com/html/nutritionix-api/html/demo-item.html
 	 *
-	 * @param string id The id of the item you want to retrieve
-	 * @param bool returnJson (Optional)This will handle if the return value is array or json string
-	 * The dev needs to make sure that the json result is returned with a json header,
-	 * the api lib just returns the json string value
-	 * @return The item array or json string depending on the returnJson value
+	 * @param string $searchTerm => The id or UPC of the item you want to retrieve
+	 * @param string $searchType => so you can choose whether to search the database using item_id or upc
+	 * @param bool $returnJson (Optional) => This will handle if the return value is array or json string
+	 *                   The dev needs to make sure that the json result is returned with a json header,
+	 *                   the api lib just returns the json string value
+	 * @param bool $returnRequestUrl (Optional) => to tell the library to return the URL for this query or not (for debugging purposes)
+	 *
+	 * @return The results as a PHP array or json string depending on the $returnJson parameter
 	 *
 	 */
 	public function getItem($searchTerm, $searchType, $returnJson = false, $returnRequestUrl = false){
@@ -181,15 +192,16 @@ class Nutritionix
 
 
 	/**
-	 * This operation returns the a brand object that contains data on all its nutritional content
+	 * This operation returns the a brand object
 	 *
-	 * @param string id The id of the brand you want to retrieve
-	 *
-	 * @param bool returnJson (Optional)This will handle if the return value is array or json string
-	 * The dev needs to make sure that the json result is returned with a json header,
-	 * the api lib just returns the json string value
+	 * @param string $id => The id of the brand you want to retrieve
+	 * @param bool $returnJson (Optional) => This will handle if the return value is array or json string
+	 *                   The dev needs to make sure that the json result is returned with a json header,
+	 *                   the api lib just returns the json string value
+	 * @param bool $returnRequestUrl (Optional) => to tell the library to return the URL for this query or not (for debugging purposes)
 	 *
 	 * @return The brand or json string depending on the returnJson value
+	 *
 	 */
 	public function getBrand($id, $returnJson = false, $returnRequestUrl = false){
 		return $this -> makeQueryRequest('brand', urlencode($id), array(), $returnJson, $returnRequestUrl);
@@ -199,17 +211,13 @@ class Nutritionix
 	/**
 	 * Performs a query request with the Nutritionix API Server
 	 *
-	 * @param string method	Method of query. Current valid methods are: search, item, brand
-	 * @param string query Query or search term / phrase
-	 * @param array params Parameters associated with the query
-	 * @param bool returnJson (Optional)This will handle if the return value is array or json string
-	 *															The dev needs to make sure that the json result is returned with a json header,
-	 *															the api lib just returns the json string value
+	 * @param string $method => Method of query. Current valid methods are: search, item, brand
+	 * @param string $query => Query or search term / phrase
+	 * @param array $params => Parameters associated with the query
+	 * @param bool $returnJson (Optional) => to return a PHP array or a json string
+	 * @param bool $returnRequestUrl (Optional) => to include the request URL for debugging purposes (only works on item and brand methods)
 	 *
-	 * @return 										The request result or json string depending on the returnJson value
-	 *
-	 * @error
-	 *	application_not_found
+	 * @return The results as a PHP array or json string depending on the $returnJson parameter
 	 */
 	private function makeQueryRequest($method, $query, $params = array(), $returnJson = false, $returnRequestUrl = false){
 		if ( in_array( $method, array('item', 'brand') ) )
@@ -256,9 +264,7 @@ class Nutritionix
 		curl_close($ch);
 
 		if ($method != 'search' && $returnRequestUrl)
-			$result = array(
-				'request_url' => $request_url,
-			);
+			$result['request_url'] = $request_url;
 
 		if ($returnJson)
 			$result = json_encode($result);
