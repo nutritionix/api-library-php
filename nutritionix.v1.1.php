@@ -43,8 +43,8 @@ class Nutritionix
 	private $app_id;
 	private $api_key;
 	//for testing this on your local machine, change https to http
-	private $api_url = "http://api.nutritionix.com/v1_1/";
-	private $api_url_search_post = "http://api.nutritionix.com/v1_1/search";
+	private $api_url = "https://api.nutritionix.com/v1_1/";
+	private $api_url_search_post = "https://api.nutritionix.com/v1_1/search";
 
 
 	/**
