@@ -38,10 +38,14 @@ if (isset($_POST['param']) && trim($_POST['param']) != ''){
 		if ($newData['min_score'] > 0)
 			$min_score = $newData['min_score'];
 
-		$fields = NULL;
 		$newData['fields'] .= '';
-		if ($newData['fields'] != '')
-			$fields = $newData['fields'];
+		$newData['fields'] = trim($newData['fields']);
+		if ($newData['fields'] != ''){
+			//check if the value is a valid json array
+			$checkJSON = json_decode($newData['fields'], true);
+			$fields = $checkJSON == null || $checkJSON == false ? array() : $checkJSON;
+		}else
+			$fields = array();
 
 		$allergen_contains_milk = NULL;
 		if ( in_array((int)$newData['allergen_contains_milk'], array(1, 0) ) )

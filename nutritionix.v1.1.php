@@ -43,8 +43,8 @@ class Nutritionix
 	private $app_id;
 	private $api_key;
 	//for testing this on your local machine, change https to http
-	private $api_url = "https://api.nutritionix.com/v1_1/";
-	private $api_url_search_post = "https://api.nutritionix.com/v1_1/search";
+	private $api_url = "http://api.nutritionix.com/v1_1/";
+	private $api_url_search_post = "http://api.nutritionix.com/v1_1/search";
 
 
 	/**
@@ -71,9 +71,9 @@ class Nutritionix
 	 * @param int $limit (Optional) => The max number of results to be returned in the page
 	 *                   by default, the api will fetch the first 10 results
 	 * @param int $min_score (Optional) => the minimum score that you want any returned document to have
-	 * @param string fields	(Optional)The fields from an item you would like to return in the results.
+	 * @param array fields	(Optional)The fields from an item you would like to return in the results.
 	 *                   Supports all item properties in comma delimited format.
-	 *                   A null parameter will return all item fields
+	 *                   An empty array parameter will return all item fields
 	 * @param bool $allergen_contains_* (Optional) => this will filter the result in case you want to return results with
 	 *                   very specific allergens
 	 * @param array $sort (Optional) => an array to customize how the result will be sorted
@@ -89,7 +89,7 @@ class Nutritionix
 			$brand_name = NULL,
 			$offset = 0, $limit = 10,
 			$min_score = NULL,
-			$fields = NULL,
+			$fields = array(),
 			$allergen_contains_milk = NULL, $allergen_contains_eggs = NULL, $allergen_contains_fish = NULL,
 			$allergen_contains_shellfish = NULL, $allergen_contains_tree_nuts = NULL, $allergen_contains_peanuts = NULL,
 			$allergen_contains_wheat = NULL, $allergen_contains_soybeans = NULL, $allergen_contains_gluten = NULL,
@@ -130,12 +130,66 @@ class Nutritionix
 		if ($min_score > 0)
 			$options['min_score'] = $min_score;
 
-		$fields .= '';
-		if ($fields != ''){
-			$fieldsArray = explode(',', $fields);
-			$options['fields'] = array();
-			foreach($fieldsArray as $value)
-				$options['fields'][] = trim($value);
+
+		if ( is_array($fields) ){
+			$acceptedFields = array(
+				'nf_serving_size_qty',
+				'nf_serving_size_unit',
+				'nf_water_grams',
+				'nf_serving_weight_grams',
+				'nf_servings_per_container',
+
+				'nf_calories',
+				'nf_calories_from_fat',
+				'nf_total_fat',
+				'nf_trans_fatty_acid',
+				'nf_saturated_fat',
+				'nf_polyunsaturated_fat',
+				'nf_monounsaturated_fat',
+				'nf_cholesterol',
+				'nf_sodium',
+				'nf_total_carbohydrate',
+				'nf_dietary_fiber',
+				'nf_sugars',
+				'nf_protein',
+
+				'nf_vitamin_a_dv',
+				'nf_vitamin_c_dv',
+				'nf_calcium_dv',
+				'nf_iron_dv',
+
+				'nf_ingredient_statement',
+				'nf_refuse_pct',
+
+				'allergen_contains_eggs',
+				'allergen_contains_fish',
+				'allergen_contains_gluten',
+				'allergen_contains_milk',
+				'allergen_contains_peanuts',
+				'allergen_contains_shellfish',
+				'allergen_contains_soybeans',
+				'allergen_contains_tree_nuts',
+				'allergen_contains_wheat',
+
+				'_id',
+				'item_id',
+				'brand_id',
+				'remote_db_id',
+
+				'item_name',
+				'brand_name',
+				'item_type',
+				'item_description',
+				'upc',
+				'leg_loc_id',
+				'remote_db_key',
+				'old_api_id',
+				'updated_at',
+				'last_sync',
+			);
+			$newFields = array_merge(array_intersect($acceptedFields, $fields), array());
+			if (count($newFields) > 0)
+				$options['fields'] = $newFields;
 		}
 
 		if ($allergen_contains_milk !== NULL && in_array( $allergen_contains_milk, array(true, false) ) )
