@@ -297,7 +297,7 @@ class Nutritionix
 				'appKey' => $this -> api_key,
 			);
 
-			$params['query'] = str_replace(array('/', '"'), array('\/', '\"'), $params['query']);
+			$params['query'] = trim( str_replace(array('/', '"', '<', '~'), array('\/', '\"', '', ''), $params['query']) );
 			$data_merged = array_merge($data, $params);
 			$data_string = json_encode($data_merged);
 
