@@ -294,7 +294,10 @@ class Nutritionix
 			$options['type'] = $field_type;
 		if ($min_score != '' && $min_score != null && (float)$min_score > 0)
 			$options['min_score'] = $min_score;
-		if ( ($offset != '' && $offset != null && (int)$offset >= 0) && ($limit != '' && $limit != null && (int)$limit > 0 && (int)$limit <= 50) ){
+
+		$offset = (int)$offset;
+		$limit = (int)$limit;
+		if ($offset >= 0 && $limit > 0 && $limit <= 50){
 			$options['offset'] = $offset;
 			$options['limit'] = $limit;
 		}
