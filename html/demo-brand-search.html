@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel='stylesheet' type='text/css' media='screen' href='../bootstrap/css/bootstrap.min.css'>
+	<link rel='stylesheet' type='text/css' media='screen' href='../css/demo.css'>
+</head>
+<body>
+
+<form class="form-horizontal" id="searchForm">
+	<h2>/brand/search Endpoint</h2>
+
+	<div class="control-group">
+		<label class="control-label required" for="apiID">Nutritionix API ID</label>
+		<div class="controls">
+			<input type="text" id="apiID" name="apiID" value="4923352a"> (text)
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label required" for="apiKey">Nutritionix API Key</label>
+		<div class="controls">
+			<input type="text" id="apiKey" name="apiKey" value="92ba2038b71107c4231dd4070071fd1c"> (text)
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label" for="brand_name">Query (Brand Name)</label>
+		<div class="controls">
+			<input type="text" id="brand_name" name="brand_name"> (text)
+		</div>
+	</div>
+
+	<div class="controls-row">
+		<label class="control-label">Auto</label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<label class="radio inline">
+			<input type="radio" name="field_auto" value="1"/> True
+		</label>
+		<label class="radio inline">
+			<input type="radio" name="field_auto" value="0"/> False
+		</label>
+		<label class="radio inline">
+			<input type="radio" name="field_auto" value="" checked/> Not Set
+		</label>
+		<div class="controls" style="margin-bottom: 15px;">
+			(a boolean opperator that tells us to use an autocomplete style query for fast prefixing)
+		</div>
+	</div>
+
+	<div class="controls-row">
+		<label class="control-label">Type</label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<label class="radio inline">
+			<input type="radio" name="field_type" value="1"/> 1
+		</label>
+		<label class="radio inline">
+			<input type="radio" name="field_type" value="2"/> 2
+		</label>
+		<label class="radio inline">
+			<input type="radio" name="field_type" value="" checked/> Not Set
+		</label>
+		<div class="controls" style="margin-bottom: 15px;">
+			(Unless defined, will include all brands. If defined: 1=search only restaurant brands (ie mcdonalds), 2=search only food manufacturer brands (ie kashi))
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label" for="min_score">Minimum Search Score</label>
+		<div class="controls">
+			<input type="text" id="min_score" name="min_score"> (float)
+			(sometimes you may see too few results, this is because a results score might be lower than min_score. Adjust this to view more results)
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label" for="offset">Offset</label>
+		<div class="controls">
+			<input type="text" id="offset" name="offset"> (interger)
+			(the offset of paging through a result set. limit must be present with offset)
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label" for="limit">Limit (10 to 50)</label>
+		<div class="controls">
+			<input type="text" id="limit" name="limit"> (interger)
+			(the limit of the results to be returned. Minimum of 1, max of 50. offset must be present with limit)
+		</div>
+	</div>
+
+	<div class="controls-row">
+		<label class="control-label">Return Result As</label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<label class="radio inline">
+			<input type="radio" name="return_result_as_json" value="1" id="returnAsJson" checked/> JSON
+		</label>
+		<label class="radio inline">
+			<input type="radio" name="return_result_as_json" value="0"/> PHP Array
+		</label>
+	</div><br/>
+
+	<div class="controls-row">
+		<label class="control-label">Return Request Url?</label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<label class="radio inline">
+			<input type="radio" name="return_request_url" value="1" checked/> True
+		</label>
+		<label class="radio inline">
+			<input type="radio" name="return_request_url" value="0"/> False
+		</label>
+	</div><br/>
+
+	<button type="submit" class="btn btn-primary btn-lg" id="submitForm">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Submit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button><br/><br/>
+
+	<hr/>
+	<a name="resultArea"></a>
+	<h2>Result</h2>
+	<a name="resultArea2"></a>
+	<pre id="result"></pre>
+</form>
+
+<script type="text/javascript" src="../js/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="../js/json.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#searchForm').submit(function(){
+		$('#result').html('Processing your request...');
+		$('html,body').animate({scrollTop: $("a[name='resultArea']").offset().top}, 'fast');
+		$.post('process-brand-search.php', {'param' : $('#searchForm').serialize()}, function(searchResult){
+			if ($('#returnAsJson').attr('checked') == 'checked'){
+				if (typeof searchResult =='object')
+					$('#result').html( JSON.stringify(searchResult, null, '\t') );
+				else
+					$('#result').html( JSON.stringify(jQuery.parseJSON(searchResult), null, '\t') );
+			}else
+				$('#result').html(searchResult);
+			$('html,body').animate({scrollTop: $("a[name='resultArea2']").offset().top}, 'fast');
+		});
+		return false;
+	});
+});
+</script>
+</body>
+</html>

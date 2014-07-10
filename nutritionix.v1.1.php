@@ -263,6 +263,47 @@ class Nutritionix
 
 
 	/**
+	 * The brand search opperation allows for a stadard or autocomplete search.
+	 * for more details on what values you can use, please go to https://developer.nutritionix.com/docs/v1_1
+	 * demo http://dev2.nutritionix.com/html/nutritionix-api/html/demo-item.html
+	 *
+	 * @param string $searchTerm => the phrase you want to search by
+	 * @param bool $field_auto (Optional) => a boolean opperator that tells us to use an autocomplete style query for fast prefixing
+	 * @param bool $field_type (Optional) => Unless defined, will include all brands. If defined: 1=search only restaurant
+	 *                   brands (ie mcdonalds), 2=search only food manufacturer brands (ie kashi)
+	 * @param float $min_score (Optional) => sometimes you may see too few results, this is because a results score might be
+	 *                   lower than min_score. Adjust this to view more results.
+	 * @param integer $offset (Optional) => the offset of paging through a result set. limit must be present with offset.
+	 * @param integer $limit (Optional) => the limit of the results to be returned. Minimum of 1, max of 50. offset must be
+	 *                   present with limit
+	 * @param bool $returnJson (Optional) => This will handle if the return value is array or json string
+	 *                   The dev needs to make sure that the json result is returned with a json header,
+	 *                   the api lib just returns the json string value
+	 * @param bool $returnRequestUrl (Optional) => to tell the library to return the URL for this query or not (for debugging purposes)
+	 *
+	 * @return The results as a PHP array or json string depending on the $returnJson parameter
+	 *
+	 */
+	public function brandSearch($searchTerm, $field_auto, $field_type, $min_score, $offset, $limit, $returnJson = false, $returnRequestUrl = false){
+		$options = array();
+		if ($searchTerm != '' && $searchTerm != null)
+			$options['query'] = $searchTerm;
+		if ( $field_auto != '' && $field_auto != null && in_array( $field_auto, array(0, 1) ) )
+			$options['auto'] = $field_auto;
+		if ( $field_type != '' && $field_type != null && in_array( $field_type, array(1, 2) ) )
+			$options['type'] = $field_type;
+		if ($min_score != '' && $min_score != null && (float)$min_score > 0)
+			$options['min_score'] = $min_score;
+		if ( ($offset != '' && $offset != null && (int)$offset >= 0) && ($limit != '' && $limit != null && (int)$limit > 0 && (int)$limit <= 50) ){
+			$options['offset'] = $offset;
+			$options['limit'] = $limit;
+		}
+
+		return $this -> makeQueryRequest('brand/search', null, $options, $returnJson, $returnRequestUrl);
+	}
+
+
+	/**
 	 * Performs a query request with the Nutritionix API Server
 	 *
 	 * @param string $method => Method of query. Current valid methods are: search, item, brand
@@ -274,12 +315,12 @@ class Nutritionix
 	 * @return The results as a PHP array or json string depending on the $returnJson parameter
 	 */
 	private function makeQueryRequest($method, $query, $params = array(), $returnJson = false, $returnRequestUrl = false){
-		if ( in_array( $method, array('item', 'brand') ) )
+		if ( in_array( $method, array('item', 'brand', 'brand/search') ) )
 			$post_params = $this -> get_request_params($params);
 
 		if ($method == 'brand')
 			$request_url = $this -> api_url.$method.'/'.$query.'?'.$post_params;
-		else if ($method == 'item')
+		else if ($method == 'item' || $method == 'brand/search')
 			$request_url = $this -> api_url.$method.'?'.$post_params;
 
 		if ($method != 'search'){
